@@ -14,9 +14,10 @@
 		font-size: 30;
 		text-align: center;
 		border: none;
-		/*background-color: #e7e7e7*/
+		background-color: #e7e7e7
 		color:white;
 		background-color: transparent;
+		color: white
 	}
 
 	input::-webkit-outer-spin-button,
@@ -38,6 +39,7 @@
 		border: none;
 		color: white;
 		padding: 10;
+		color: white
 
 	}
 	
@@ -58,11 +60,11 @@
 	}
 
 
-	#escondido{
-		width: 100%;
+	#escondido2,#escondido{
+		width: 50%;
 		height: 1em;
-		padding: 10 0;
-		background-color: #18212b;
+		padding: 20 0;
+		background-color: transparent;
 		overflow: hidden;
 		z-index: 1;
 		position: absolute;
@@ -72,36 +74,102 @@
 		justify-content: center;
 	}
 
-	#escondido:hover{
-		height: 15em;
+	#escondido2{
+		left: 50%
+	}
+
+	#escondido2:hover,#escondido:hover{
+		padding: 0;
+		height: 100%;
+		width: 50%;
+		background-color: #18212b;
+	}
+
+	img{width: 100}
+
+	#quadros{
+		overflow-y: scroll;
+		height: 15em
+	}
+
+	#quadros img{
+		width: 4em;margin: 0 0 1 1;
+	}
+
+	#list_quadro img{width: 3em;margin: 1 1 0 0;}
+
+	.invisible{display: none;}
+
+	input{
+		border: none;
+		background-color: transparent;
+		color: white
+	}
+
+	#list_quadro{
+		padding: 10;
+		overflow: auto;
 	}
 </style>
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<div id="escondido2">
+	<div>
+		<br>
+		<p>Lista</p>
+		<br>
+
+		<button onclick="montarTreino('1')">Limpar</button>
+		<button onclick="montarTreino('2 4 6 8 10')">Semana 1</button>
+		<button onclick="montarTreino('12 14 16 18 25 26 60 62 63 64')">Semana 2</button>
+		<button onclick="montarTreino('22 24 26 28 30 49 58 69 60 20')">Semana 3</button>
+		<button onclick="montarTreino('32 34 36 38 40 42 46 20 24 58 63')">Semana 4</button>
+		<button onclick="montarTreino('42 44 46 48 50 52 54 56 57 60 70 72')">Semana 5</button>
+		<button onclick="montarTreino('52 54 56 58 60 62 64 66 67 69 74 80 81')">Semana 6</button>
+		<br>
+		
+		<div id="quadros"></div>
+		<br><input id="lis" type="" name="">
+
+		<div id="list_quadro"></div>
+	</div>
+</div>
+
 <div id="escondido">
 	<div>
-	Tempo<br>
-	<input type="number" onClick="this.select()" name="" placeholder="hor" id="hor1" value="0">
-	<input type="number" onClick="this.select()" name="" placeholder="min" id="min1" value="1">
-	<input type="number" onClick="this.select()" name="" placeholder="seg" id="seg1" value="0">
 
-	<br><br>
-	Intervalo<br>
-	<input type="number" onClick="this.select()" name="" placeholder="hor" id="hor2" value="0">
-	<input type="number" onClick="this.select()" name="" placeholder="min" id="min2" value="0">
-	<input type="number" onClick="this.select()" name="" placeholder="seg" id="seg2" value="30">
+		<br>Tempo<br>
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="hor" id="hor1" value="0">
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="min" id="min1" value="1">
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="seg" id="seg1" value="0">
 
-	<br>
-	<button id="btplay">Play</button>
-	<button id="btpause">Pause</button>
-	<button id="btzerar">Zerar</button>
+		<br><br>
+		Intervalo<br>
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="hor" id="hor2" value="0">
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="min" id="min2" value="0">
+		<input type="number" max="60" onClick="this.select()" name="" placeholder="seg" id="seg2" value="30">
+
+		<br>
+		<button id="btplay">Play</button>
+		<button id="btpause">Pause</button>
+		<button id="btzerar">Reset</button>
+
+		<br><br>
+
+		
+
 	</div>
+
+
 </div>
 
 <div id="centrao">
 	<div>
+		<h2 id="pos">1</h2><br>
+		<img id="workout" src="imgs/1.gif">
+		<br><br>
 		<h2 id="ran2"></h2>
 		<h1 id="tempo">00:00:00</h1>
 		<br>
@@ -117,6 +185,12 @@
 </div>
 
 <script>
+
+	ordem = "3 1 2 9 7 8 4 2".split(" ")
+
+	num = 0
+
+	workout.src = "imgs/"+ordem[num]+".gif"
 
 	status_play = 0
 
@@ -197,11 +271,27 @@
 				t=getTimeOne()
 				guitar.play()
 				cir.setAttribute("stroke","#2ecc71")
+				num++
+
+				if(num == ordem.length){
+
+					alert('finalizou')
+				}
+
+				pos.innerHTML = num+1
+
+				if(num < ordem.length)
+					workout.src = "imgs/"+ordem[num]+".gif"
+
+				if(num > ordem.length)
+					num=0
 			}
 			else{
 				t=getTimeTwo()
 				bass.play()
 				cir.setAttribute("stroke","#18212b")
+				pos.innerHTML = "Relax"
+				workout.src = "imgs/33.gif"
 			}
 		}
 
@@ -232,4 +322,76 @@
 		cir.setAttribute("stroke-dasharray","calc("+x+" * 31.4 / 100) 31.4")
 	}
 
+</script>
+
+<script>
+
+	lista = []
+
+	function add(e){
+
+		image = new Image()
+		image.src = "imgs/"+e+".gif"
+		image.setAttribute('onclick','rmv(this)')
+		image.setAttribute('n',e)
+		list_quadro.appendChild(image)	
+		lista.push(e)
+
+		toinput()
+
+		changeList()
+	}
+
+	function rmv(e){
+		e.remove()
+		toinput()
+	}
+
+	function toinput(){
+		l = list_quadro.querySelectorAll("img")
+
+		vazio = []
+
+		for(i of l){
+			vazio.push(i.getAttribute("n"))
+		}
+
+		vazio = vazio.join(" ")
+
+		lis.value = vazio
+
+		try{
+			workout.src = "imgs/"+ordem[0]+".gif"
+		}catch(e){
+			alert('concluido')
+		}
+
+	}
+
+	function changeList(){
+		ordem = lis.value.split(" ")
+
+		workout.src = "imgs/"+ordem[0]+".gif"
+		toinput()
+	}
+
+	for(i=1;i<=89;i++){
+		quadros.innerHTML += "<img onclick='add("+i+")' src='imgs/"+i+".gif'>"
+	}
+
+	lis.onkeyup=function(e){
+		montarTreino(this.value)
+	}
+
+	function montarTreino(n){
+		
+		n = n.split(" ")
+		list_quadro.innerHTML = ""
+		ordem = ""	
+		for(i of n){
+			add(i)
+		}
+
+
+	}
 </script>
