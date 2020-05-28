@@ -1,0 +1,227 @@
+<style>
+	*{
+		font-family: monospace;
+		outline: none;
+		transition: 0.5s;
+		font-family: 'Roboto', sans-serif;
+		padding: 0;
+		margin: 0
+
+	}
+	input[type="text"]{
+		width: 50;
+		height: 50;
+		font-size: 30;
+		text-align: center;
+		border: none;
+		/*background-color: #e7e7e7*/
+		color:white;
+		background-color: transparent;
+	}
+
+	body{
+		text-align: center;
+		background-color: #212d3a;
+		color: white;
+		
+	}
+
+
+	button{
+		background-color: rgba(0,0,0,0.1);
+		border: none;
+		color: white;
+		padding: 10;
+
+	}
+	
+	h1{
+		font-weight: none
+	}
+
+	#centrao{
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		top:0;
+		left: 0;
+		
+	}
+
+
+	#escondido{
+		width: 50;
+		height: 50;
+		background-color: #18212b;
+		overflow: hidden;
+		padding: 10;	
+		z-index: 1;
+		position: absolute;
+		position: relative;
+		top: 0;
+		left: 0;
+	}
+
+	#escondido:hover{
+		width: 100%;
+		height: 30%;
+		padding: 5 0;	
+	}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<div id="escondido">
+	Treino<br>
+	<input type="text" name="" placeholder="hor" id="hor1" value="0">
+	<input type="text" name="" placeholder="min" id="min1" value="1">
+	<input type="text" name="" placeholder="seg" id="seg1" value="0">
+
+	<br><br>
+	Intervalo<br>
+	<input type="text" name="" placeholder="hor" id="hor2" value="0">
+	<input type="text" name="" placeholder="min" id="min2" value="0">
+	<input type="text" name="" placeholder="seg" id="seg2" value="30">
+
+	<br>
+	<button id="btplay">Play</button>
+	<button id="btpause">Pause</button>
+	<button id="btzerar">Zerar</button>
+</div>
+
+<div id="centrao">
+	<div>
+		<h2 id="ran2"></h2>
+		<h1 id="tempo">00:00:00</h1>
+		<br>
+		<svg height="300" width="300" viewBox="0 0 20 20">
+			<circle r="10" cx="10" cy="10" fill="transparent" />
+			<circle id="cir" r="5" cx="10" cy="10" fill="transparent"
+			stroke="#2ecc71"
+			stroke-width="10"
+			stroke-dasharray="calc(100 * 31.4 / 100) 31.4"
+			transform="rotate(-90) translate(-20)" />
+		</svg>
+	</div>
+</div>
+
+<script>
+
+	status_play = 0
+
+	opcao  = 0
+
+	s=0
+	m=0
+	h=0
+	ms = 0
+
+	t = getTimeOne()
+	valor = 0
+
+	aud = new Audio("clock.mp3")
+	bass = new Audio("bass.mp3")
+	guitar = new Audio("guitar.mp3")
+
+
+	btplay.onclick=function(){status_play=1}
+
+	btpause.onclick=function(){status_play=0}
+	
+	centrao.onclick=function(){status_play=1}
+
+	btzerar.onclick=function(){
+		status_play=0;
+		t=getTimeOne();
+		aud.setCurrentTime=0
+		aud.pause()
+
+		valor = 0
+
+		if(opcao%2==0)
+			pie(valor,getTimeOne())
+		else
+			pie(valor,getTimeTwo())
+
+
+	}
+
+	function getTimeOne(){
+
+		tempo.style.color="#2ecc71"
+
+		return parseInt(hor1.value)*60*60+parseInt(min1.value)*60+parseInt(seg1.value)
+	}
+
+	function getTimeTwo(){
+
+		tempo.style.color="rgba(255,255,255,0.5)"
+
+		return parseInt(hor2.value)*60+parseInt(min2.value)*60*60+parseInt(seg2.value)
+	}
+
+	setInterval(function(){
+
+		if(status_play){
+			t--
+			valor++
+
+			if(opcao%2==0)
+				pie(valor,getTimeOne())
+			else
+				pie(valor,getTimeTwo())
+		}
+
+		if(t==5){
+			aud.play()
+		}
+
+		if(t == 0){
+
+			opcao++
+			valor=0
+
+			if(opcao%2==0){
+				t=getTimeOne()
+				guitar.play()
+				cir.setAttribute("stroke","#2ecc71")
+			}
+			else{
+				t=getTimeTwo()
+				bass.play()
+				cir.setAttribute("stroke","#18212b")
+			}
+		}
+
+		tempo.innerHTML = setarTempo(t)
+
+
+
+	},1000)
+
+	function setarTempo(seg){
+
+		mi = parseInt(seg/60)%60
+		ho = parseInt(seg/60/60)%24
+
+		seg = seg%60
+
+		if( seg.toString().length < 2 ) seg = "0"+seg;
+		if( mi.toString().length < 2 ) mi = "0"+mi;
+		if( ho.toString().length < 2 ) ho = "0"+ho;
+
+
+		return ho+":"+mi+":"+seg
+	}
+
+
+	function pie(value,max){
+		x = value*100/max
+		cir.setAttribute("stroke-dasharray","calc("+x+" * 31.4 / 100) 31.4")
+	}
+
+</script>
